@@ -17,22 +17,22 @@ Navegue pelas seções abaixo para encontrar a informação que procura. Cada se
 * ### 🏗️ Arquitetura do Sistema
     > Visão geral da arquitetura, padrões de projeto, tecnologias e o racional por trás das decisões técnicas mais importantes.
     >
-    > **[Acessar documentação de Arquitetura](./architecture/README.md)**
+    > **[Acessar documentação de Arquitetura](docs/architecture/README.md)**
 
 * ### 🗃️ Banco de Dados
     > Estrutura detalhada, diagrama entidade-relacionamento (DER) e convenções utilizadas no banco de dados do Ocelot.
     >
-    > **[Acessar documentação do Banco de Dados](./database/README.md)**
+    > **[Acessar documentação do Banco de Dados](docs/database/README.md)**
 
 * ### 🔌 Documentação da API
     > Detalhes sobre todos os endpoints, exemplos de requisições, respostas e códigos de status para a integração com o backend.
     >
-    > **[Acessar documentação da API](./api/README.md)**
+    > **[Acessar documentação da API](docs/api/README.md)**
 
 * ### 📖 Guia do Usuário
     > Manual com o passo a passo de como instalar e utilizar as funcionalidades da aplicação na perspectiva do usuário final.
     >
-    > **[Acessar Guia do Usuário](./user-guide/README.md)**
+    > **[Acessar Guia do Usuário](docs/user-guide/README.md)**
 
 ---
 
