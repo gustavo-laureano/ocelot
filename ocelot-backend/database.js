@@ -1,5 +1,5 @@
 
-// Importa a biblioteca 'pg' (PostgreSQL client)
+
 const { Pool } = require('pg');
 
 // Importa a biblioteca 'dotenv' para carregar variáveis de ambiente do arquivo .env

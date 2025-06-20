@@ -1,11 +1,13 @@
-
 // Importa o framework Express
-const express = require('express');
+const express = require("express");
 // Importa o 'cors' para permitir requisições de diferentes origens (ex: seu frontend)
-const cors = require('cors');
+const cors = require("cors");
 // Importa a configuração do banco de dados
-const db = require('./database');
-
+const db = require("./database");
+// Importa as rotas de autenticação do arquivo
+const authRoutes = require("./routes/auth.js");
+const projectRoutes = require("./routes/project.js");
+const teamRoutes = require("./routes/team.js");
 // Inicializa a aplicação Express
 const app = express();
 // Define a porta do servidor, usando a variável de ambiente ou 3000 como padrão
@@ -16,23 +18,28 @@ app.use(cors()); // Habilita o CORS para todas as rotas
 app.use(express.json()); // Habilita o parsing de JSON no corpo das requisições
 
 // Rota principal de boas-vindas
-app.get('/', (req, res) => {
-  res.json({ message: 'Bem-vindo à API do Ocelot!' });
+app.get("/", (req, res) => {
+  res.json({ message: "Bem-vindo à API do Ocelot!" });
 });
 
-// =========== ROTAS DE EXEMPLO ===========
-// Aqui você definirá suas rotas (endpoints) da API.
+// =========== ROTAS  ===========
+
+app.use("/auth", authRoutes);
+app.use("/project", projectRoutes);
+app.use("/team", teamRoutes);
 
 // Rota de exemplo para buscar todos os usuários
-app.get('/users', async (req, res) => {
+app.get("/users", async (req, res) => {
   try {
     // Executa a query para selecionar todos os usuários
-    const { rows } = await db.query('SELECT id, username, name, email FROM "USER"');
+    const { rows } = await db.query(
+      'SELECT id, username, name, email FROM "USER"',
+    );
     // Envia os resultados como resposta JSON
     res.status(200).json(rows);
   } catch (error) {
-    console.error('Erro ao buscar usuários:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    console.error("Erro ao buscar usuários:", error);
+    res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { Title, Card } from '@/constants/Colors';
+import { Title, Card } from '@/constants/theme';
 
 export default function CardHours() {
   return (

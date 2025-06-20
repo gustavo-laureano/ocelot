@@ -4,6 +4,7 @@ import Carousel from '@/components/layout/Carousel';
 import CardHours from '@/components/layout/CardHours';
 import CardGraph from '@/components/layout/CardGraph';
 
+
 export default function DashboardScreen() {
 
   return (

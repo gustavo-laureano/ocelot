@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from 'react-native';
-import { Title, Card, ScrollViewer } from '@/constants/Colors';
+import { Title, Card, ScrollViewer } from '@/constants/theme';
 
 
 export default function Home() {
