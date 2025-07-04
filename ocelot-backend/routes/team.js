@@ -41,4 +41,22 @@ router.get('/list', async (req, res) => {
     }
 });
 
+
+router.get('/:teamId/users', async (req, res) => {
+    const { teamId } = req.params;
+
+    try {
+        const users = await db.query(
+            `SELECT u.* FROM "USERS" u
+             INNER JOIN "USERS_TEAMS" ut ON u.id = ut.user_id
+             WHERE ut.team_id = $1`,
+            [teamId]
+        );
+        res.status(200).json({ users: users.rows });
+    } catch (error) {
+        console.error('Erro ao listar usuários do time:', error);
+        res.status(500).json({ message: 'Erro interno do servidor' });
+    }
+});
+
 module.exports = router;

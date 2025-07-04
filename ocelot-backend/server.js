@@ -1,21 +1,23 @@
-// Importa o framework Express
 const express = require("express");
-// Importa o 'cors' para permitir requisições de diferentes origens (ex: seu frontend)
 const cors = require("cors");
-// Importa a configuração do banco de dados
 const db = require("./database");
-// Importa as rotas de autenticação do arquivo
+
+const verifyToken = require('./authMiddleware');
+
 const authRoutes = require("./routes/auth.js");
 const projectRoutes = require("./routes/project.js");
 const teamRoutes = require("./routes/team.js");
-// Inicializa a aplicação Express
+
 const app = express();
-// Define a porta do servidor, usando a variável de ambiente ou 3000 como padrão
+
 const PORT = process.env.PORT || 3000;
 
-// Middlewares
-app.use(cors()); // Habilita o CORS para todas as rotas
-app.use(express.json()); // Habilita o parsing de JSON no corpo das requisições
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+
+app.use(cors());
+app.use(express.json());
 
 // Rota principal de boas-vindas
 app.get("/", (req, res) => {
