@@ -2,13 +2,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Link } from 'expo-router';
+import { purpleLight, Title } from '@/constants/theme';
 
 export default function Header() {
   return (
     <View style={styles.headerContainer}>
-      <Text style={styles.logo}>Ocelot</Text>
+      <Text style={styles.logo}>ocelot</Text>
       <View style={styles.menuItems}>
-        <Link href="/(main)/myaccount" asChild>
+        <Link href="/(main)/minhaconta" asChild>
           <Pressable>
             <Text style={styles.menuText}>Minha conta</Text>
           </Pressable>
@@ -29,10 +30,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 15,
-    paddingHorizontal: 30,
-    backgroundColor: '#3a3688', // Um pouco mais claro que o fundo para destacar
-    borderBottomWidth: 1,
-    borderBottomColor: '#4D49FF',
+    paddingHorizontal: '3%',
+    marginBottom: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: purpleLight, // Cor do contorno inferior
   },
   logo: {
     color: '#ffffff',

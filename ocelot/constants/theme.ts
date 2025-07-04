@@ -5,8 +5,11 @@ export const tintColorLight = '#dec2ff';
 export const purpleDark = '#2D2A6C';
 export const midDarkPurple = '#3b358c';
 export const purpleLight = '#4a45a0';
+export const FONT_FAMILY = 'DM_SANS';
 
-
+export const GlobalText = {
+  fontFamily: FONT_FAMILY,
+};
 export const Title = StyleSheet.create({
   h1: {
     fontSize: 24,

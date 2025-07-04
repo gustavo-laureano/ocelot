@@ -7,7 +7,8 @@ export default function NotFoundScreen() {
   return (
     <>
       <Stack.Screen options={{ title: 'Oops!' }} />
-      essa tela nao existe moço
+      essa tela ainda nao existe!
+      calma aí que lá vem coisa nova!
     </>
   );
 }

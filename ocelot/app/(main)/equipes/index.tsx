@@ -1,11 +1,31 @@
-import { View, Text, ScrollView } from 'react-native';
-import { Title, Card, ScrollViewer } from '@/constants/theme';
+import { Text, ScrollView, Pressable} from 'react-native';
+import React, { useState } from 'react';
+import TeamList from '@/components/layout/TeamList';
+import { useRouter } from 'expo-router';
+
+
 
 export default function Home() {
-  return (
-    <ScrollView style={ScrollViewer.container}>
-    <View style={Card.cardContainer}> 
-    <Text style={Title.h1}> Equipes </Text>
-    </View></ScrollView>
-  );
+    const router = useRouter();
+      
+    function handleNavigate(url: string) {
+        router.push(`/${url}`);
+    }
+
+   return(
+   <ScrollView>
+    <Pressable onPress={() => handleNavigate('equipes/novo')} style={{ 
+    backgroundColor: "white",    
+    padding: 5, 
+    borderRadius: 5, 
+    marginRight: 15,
+    marginBottom: 15,
+    alignSelf: "flex-end",   }}>
+    <Text style={{}}>Nova equipe</Text></Pressable>
+    <TeamList/>
+    </ScrollView>);
 }
+
+
+ 
+

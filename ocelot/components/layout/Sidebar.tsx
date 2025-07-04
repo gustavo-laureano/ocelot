@@ -6,7 +6,7 @@ import { tintColorLight, purpleLight, midDarkPurple } from "@/constants/theme";
 
 const navItems: NavItem[] = [
   { name: "Página Inicial", href: "/" },
-  { name: "Projetos", href: "/projects" },
+  { name: "Projetos", href: "/projetos" },
   { name: "Equipes", href: "/equipes" },
   { name: "Relatórios", href: "/relatorios" },
   { name: "Exportar", href: "/exportar" },
