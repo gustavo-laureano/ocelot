@@ -1,45 +1,73 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import Carousel from '@/components/layout/Carousel';
-import CardHours from '@/components/layout/CardHours';
-import CardGraph from '@/components/layout/CardGraph';
+import WeeklyCalendar from '@/components/layout/Calendar';
+import RankingWidget from '@/components/layout/Ranking';
+import { useEffect } from 'react';
+import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+function useAuthRedirect() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        router.replace('/login');
+      }
+    };
+    checkToken();
+  }, [router]);
+}
+
+useAuthRedirect();
 
 export default function DashboardScreen() {
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
-           
-      <Carousel/>
-      <View style={styles.statsContainer}>
-        <CardHours/>
-        <CardGraph/>
-      </View>
+      <View style={styles.row}>
+        {/* Esquerda: Carousel em cima, Calendar embaixo */}
+        
+          <Carousel />
+          <View style={{ marginTop: 16 }}>
+            <RankingWidget />
 
-      <Text style={styles.placeholderText}>[Painel de Ranking]</Text>
-     
-      </ScrollView>
+          <WeeklyCalendar
+              onDateSelect={function (date: Date): void {
+                throw new Error('Function not implemented.');
+              }}
+            />
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
   },
-  statsContainer: {
+  row: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 0,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
   },
-  // Usei um estilo temporário para os placeholders
-  placeholderText: {
-    color: 'white', 
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    padding: 20,
-    borderRadius: 8,
-    margin: 5,
-    textAlign: 'center',
-  }
+  leftSide: {
+    flex: 1,
+    marginRight: 16,
+    minWidth: 250,
+  },
+  divider: {
+    width: 1,
+    backgroundColor: '#ddd',
+    marginHorizontal: 12,
+    alignSelf: 'stretch',
+  },
+  rightSide: {
+    width: 220,
+    flexShrink: 0,
+  },
 });
 

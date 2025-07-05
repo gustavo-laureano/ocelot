@@ -1,70 +1,182 @@
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { ScrollView, Text, View, SafeAreaView, Image, TouchableOpacity, StyleSheet } from "react-native";
-import { GlobalText, FONT_FAMILY, purpleDark } from "../../../constants/theme";
-import React, { useState } from "react";
+import { ScrollView, Text, View, SafeAreaView, Pressable, Image, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import { GlobalText, FONT_FAMILY, purpleDark, Card } from "../../../constants/theme";
+import React, { useState, useEffect } from "react";
 import TaskList from "@/components/layout/TaskList";
+import { encode as base64encode } from "base-64";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from '@/constants/env';
+
+type Project = {
+	id: number;
+	team_id: number;
+	owner_id: number;
+	name: string;
+	description: string;
+	photo?: { type: string; data: number[] } | string | null;
+	start_date: string;
+	real_end_date?: string | null;
+	status: string;
+	created: string;
+	updated: string;
+	team_members?: string;
+};
 
 export default function PaginaDoProjeto() {
 	const router = useRouter();
-	const { id } = useLocalSearchParams();
+	const { id: project_id } = useLocalSearchParams();
+	const [projects, setProjects] = useState<Project[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+	const [token, setToken] = useState<string | null>(null);
+	const [userId, setUserId] = useState<string | null>(null);
 
-	
+	useEffect(() => {
+		const fetchAuth = async () => {
+			const t = await AsyncStorage.getItem("token");
+			const u = await AsyncStorage.getItem("userId");
+			setToken(t);
+			setUserId(u);
+		};
+		fetchAuth();
+	}, []);
 
-	const [textInput1, setTextInput1] = useState("");
+	useEffect(() => {
+		const fetchProjects = async () => {
+			if (!token || !userId) {
+				setError("Token ou ID do usuário não encontrado. Por favor, faça login.");
+				setLoading(false);
+				return;
+			}
+			try {
+				const response = await fetch(
+					`${API_URL}/project/list?project_id=${project_id}`,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+							"Content-Type": "application/json",
+						},
+					}
+				);
+				if (!response.ok) {
+					const errorData = await response.json();
+					throw new Error(errorData.message || "Falha ao buscar projetos.");
+				}
+				const data = await response.json();
+				setProjects(data.projects || []);
+			} catch (err: any) {
+				setError(err.message);
+			} finally {
+				setLoading(false);
+			}
+		};
+		if (token && userId) fetchProjects();
+	}, [token, userId, project_id]);
+
+	async function deleteProject(project_id: number) {
+		Alert.alert(
+			"Confirmar Exclusão",
+			"Você tem certeza?",
+			[
+				{ text: "Cancelar", style: "cancel" },
+				{
+					text: "Sim, Apagar",
+					onPress: async () => {
+						try {
+							if (!token) {
+								setError("Token de autenticação não encontrado. Por favor, faça login novamente.");
+								return;
+							}
+							if (!project_id) {
+								setError("ID do projeto não fornecido para exclusão.");
+								return;
+							}
+							setLoading(true);
+							const response = await fetch(
+								`${API_URL}/project/delete?project_id=${project_id}`,
+								{
+									method: "DELETE",
+									headers: {
+										Authorization: `Bearer ${token}`,
+										"Content-Type": "application/json",
+									},
+								}
+							);
+							if (!response.ok) {
+								const errorData = await response.json();
+								throw new Error(errorData.message || `Falha ao excluir projeto com ID ${project_id}`);
+							}
+							setProjects((prevProjects) => prevProjects.filter((proj) => proj.id !== project_id));
+							Alert.alert("Sucesso", "Projeto excluído com sucesso!");
+						} catch (err: any) {
+							setError(err.message);
+							Alert.alert("Erro", err.message);
+						} finally {
+							setLoading(false);
+						}
+					},
+				},
+			],
+			{ cancelable: true }
+		);
+	}
+
+	if (loading) {
+		return (
+			<View>
+				<ActivityIndicator />
+			</View>
+		);
+	}
 
 	return (
 		<SafeAreaView style={styles.safeArea}>
-			<ScrollView style={styles.scrollView}>
-				<View style={styles.headerContainer}>
-					<Image
-						source={{
-							uri: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/hp3LMScHsR/dt6juf8t_expires_30_days.png",
-						}}
-						resizeMode={"stretch"}
-						style={styles.headerImage}
-					/>
-					<View style={styles.headerTextContainer}>
-						<Text style={styles.headerTitle}>{"Nome do projeto"}</Text>
-						<Text style={styles.headerSubtitle}>{"Nome do projeto"}</Text>
-					</View>
-				</View>
-				<View style={styles.tabsContainer}>
-					<TouchableOpacity style={styles.tabButton} onPress={() => alert("Pressed!")}>
-						<Text style={styles.tabButtonText}>{"Lista"}</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.tabButton} onPress={() => alert("Pressed!")}>
-						<Text style={styles.tabButtonText}>{"Kanban"}</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.tabButton} onPress={() => alert("Pressed!")}>
-						<Text style={styles.tabButtonText}>{"Calendário"}</Text>
-					</TouchableOpacity>
-				</View>
-				<View style={styles.cardContainer}>
-					<View style={styles.cardTitleRow}>
-						<Text style={styles.cardId}>{"#001"}</Text>
-						<Text style={styles.cardTitle}>{" Desenvolvimento da tal coisa de tal coisa de num sei oque"}</Text>
-					</View>
-					<View style={styles.cardInfoRow}>
+			<Pressable onPress={() => router.navigate('projetos')} style={{ 
+				backgroundColor: "white",    
+				padding: 5, 
+				borderRadius: 5, 
+				marginRight: 15,
+				marginBottom: 15,
+				alignSelf: "flex-end",   }}>
+				<Text style={{}}>Voltar</Text></Pressable>
+	
+			{projects.map((project) => (
+				<ScrollView style={styles.scrollView} key={project.id}>
+					<View style={styles.headerContainer}>
 						<Image
-							source={{ uri: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/hp3LMScHsR/4dled7uu_expires_30_days.png" }}
-							resizeMode={"stretch"}
-							style={styles.cardUserIcon}
+							source={{
+								uri: typeof project.photo === "string" ? project.photo : `data:${project.photo?.type};base64,${base64encode(String.fromCharCode(...project.photo?.data || []))}`,
+							}}
+							resizeMode={"cover"}
+							style={styles.headerImage}
 						/>
-						<Text style={styles.cardUsers}>{"Diego, Gustavo, João"}</Text>
-						<Image
-							source={{ uri: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/hp3LMScHsR/3olhbwpe_expires_30_days.png" }}
-							resizeMode={"stretch"}
-							style={styles.cardStatusIcon}
-						/>
-						<Text style={styles.cardStatus}>{"Em andamento"}</Text>
+						<View style={styles.headerTextContainer}>
+							<Text style={styles.headerTitle}>{project.name}</Text>
+							<Text style={styles.headerSubtitle}>{project.description}</Text>
+						</View>
 					</View>
-				</View>
-			</ScrollView>
+					<View style={styles.tabsContainer}>
+						<TouchableOpacity style={styles.tabButton} onPress={() => alert("guenta que ainda nao funciona!")}>
+							<Text style={styles.tabButtonText}>{"Lista"}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.tabButton} onPress={() => alert("guenta que ainda nao funciona!")}>
+							<Text style={styles.tabButtonText}>{"Kanban"}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.tabButton} onPress={() => alert("guenta que ainda nao funciona!")}>
+							<Text style={styles.tabButtonText}>{"Calendário"}</Text>
+						</TouchableOpacity>
+					</View>
+															
+						<TaskList/>
+					
+				</ScrollView>
+			))}
 		</SafeAreaView>
 	);
 }
 
 const styles = StyleSheet.create({
+	// ... (seu styles permanece igual)
 	safeArea: {
 		flex: 1,
 	},
@@ -84,7 +196,8 @@ const styles = StyleSheet.create({
 		width: 203,
 		height: 128,
 		marginRight: 19,
-	},
+		borderRadius: 10,
+			},
 	headerTextContainer: {
 		marginTop: 7,
 	},
@@ -97,6 +210,7 @@ const styles = StyleSheet.create({
 		color: "#EAEAED",
 		fontSize: 32,
 		fontWeight: "bold",
+		maxWidth: "70%",
 	},
 	tabsContainer: {
 		flexDirection: "row",
@@ -152,7 +266,7 @@ const styles = StyleSheet.create({
 		color: "#EAEAED",
 		fontSize: 20,
 		fontWeight: "bold",
-		marginRight: 367,
+		marginRight: 20,
 	},
 	cardStatusIcon: {
 		width: 17,

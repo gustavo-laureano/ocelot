@@ -4,7 +4,8 @@ import { Title, Card, purpleDark } from '@/constants/theme';
 import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_URL = 'http://localhost:3000/auth/login';
+import { API_URL} from '@/constants/env';
+
 
 export default function LoginForm() {
 
@@ -35,7 +36,7 @@ export default function LoginForm() {
     };
 
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

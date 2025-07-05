@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { purpleDark } from "@/constants/theme";
 import GroupIcon from '@/assets/images/group.svg'; 
+import { API_URL } from "@/constants/env"; 
 
 type Team = {
   id: number;
@@ -49,7 +50,7 @@ export default function TeamList() {
               setLoading(true);
 
               const response = await fetch(
-                `http://localhost:3000/team/delete?team_id=${team_id}`,
+                `${API_URL}/team/delete?team_id=${team_id}`,
                 {
                   method: "DELETE",
                   headers: {
@@ -89,7 +90,7 @@ export default function TeamList() {
         }
 
         const response = await fetch(
-          `http://localhost:3000/team/list?userId=${userId}`,
+          `${API_URL}/team/list?userId=${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

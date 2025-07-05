@@ -14,6 +14,7 @@ import {
 // Supondo que seu theme.ts exporte a cor
 import {purpleDark} from '@/constants/theme'; 
 
+import { API_URL } from '@/constants/env';
 // Bibliotecas nativas - INSTALE-AS!
 // npx expo install expo-image-picker @react-native-community/datetimepicker
 import * as ImagePicker from 'expo-image-picker';
@@ -108,7 +109,7 @@ const ProjectCreate: React.FC = () => {
     setMessage('');
 
     // **IMPORTANTE**: Use o IP da sua máquina, não 'localhost'
-    const API_URL = 'http://localhost:3000/project/create'; // <-- TROQUE PELO SEU IP
+
 
     const body = {
       ...form,
@@ -119,7 +120,7 @@ const ProjectCreate: React.FC = () => {
     };
 
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}/project/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)

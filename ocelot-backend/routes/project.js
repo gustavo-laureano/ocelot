@@ -25,10 +25,13 @@ router.post('/create', async (req, res) => {
 
 router.get('/list', async (req, res) => {
     const { userId } = req.query;
+    const { project_id } = req.query;
 
-    if (!userId) {
-        return res.status(400).json({ message: 'O parâmetro userId é obrigatório.' });
+    if (!userId && !project_id) {
+        return res.status(400).json({ message: 'O parâmetro userId ou team_id é obrigatório' });
     }
+
+    if (userId) {
     try {
         const projects = await db.query(
             `SELECT
@@ -49,6 +52,29 @@ router.get('/list', async (req, res) => {
     } catch (error) {
         console.error('Erro ao listar projetos:', error);
         res.status(500).json({ message: 'Erro interno do servidor' });
+    }}
+    if(project_id){
+    try {
+        const projects = await db.query(
+            `SELECT
+            P.*,
+            STRING_AGG(U.name, ', ') AS team_members
+        FROM
+            "PROJECT" AS P
+        LEFT JOIN
+            "USERS_TEAMS" AS UT ON P.team_id = UT.team_id
+        LEFT JOIN
+            "USER" AS U ON UT.user_id = U.id
+        GROUP BY
+            P.id, P.name
+        HAVING
+            SUM(CASE WHEN P.id = $1 THEN 1 ELSE 0 END) > 0;`,[project_id]
+        );
+        res.status(200).json({ projects: projects.rows });
+    } catch (error) {
+        console.error('Erro ao listar projetos:', error);
+        res.status(500).json({ message: 'Erro interno do servidor' });
+    }
     }
 });
 

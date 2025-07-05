@@ -7,6 +7,9 @@ const verifyToken = require('./authMiddleware');
 const authRoutes = require("./routes/auth.js");
 const projectRoutes = require("./routes/project.js");
 const teamRoutes = require("./routes/team.js");
+const taskRoutes = require("./routes/task.js");
+const userRoutes = require("./routes/user.js");
+
 
 const app = express();
 
@@ -29,6 +32,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/project", projectRoutes);
 app.use("/team", teamRoutes);
+app.use("/task", taskRoutes);
 
 // Rota de exemplo para buscar todos os usuários
 app.get("/users", async (req, res) => {

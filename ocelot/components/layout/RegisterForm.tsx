@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoid
 import { Title, Card, purpleDark } from '@/constants/theme';
 import { useState } from 'react';
 
-// A URL do seu backend. Mude se for diferente.
-const API_URL = 'http://localhost:3000/auth/register'; 
+
+import { API_URL } from '@/constants/env';
 // Se estiver testando em um celular Android, use o IP da sua máquina no lugar de localhost. Ex: 'http://192.168.1.10:3000/auth/register'
 
 export default function RegisterForm() {

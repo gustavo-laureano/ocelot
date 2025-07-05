@@ -11,11 +11,13 @@ import {
   Alert,
 } from "react-native";
 import { encode as base64encode } from "base-64";
+import { Button } from "@react-navigation/elements";
+import { router, useRouter } from "expo-router";
 
 // Assuming you have a default icon at this path
 // Make sure this path is correct for your project
 const defaultIcon = require("@/assets/images/icon.png");
-
+const router = useRouter();
 type Project = {
   id: number;
   team_id: number;
@@ -200,8 +202,10 @@ export default function ProjectList() {
   }
 
   return (
+
     <View>
-      <Text style={styles.header}>Meus Projetos</Text>
+      <Text >Meus Projetos</Text>
+
       {projects.map((project) => (
         <TouchableOpacity key={project.id} style={styles.projectItem}>
           <Pressable
@@ -242,6 +246,7 @@ export default function ProjectList() {
             )}
           </View>
         </TouchableOpacity>
+
       ))}
     </View>
   );
