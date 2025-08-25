@@ -1,0 +1,28 @@
+# Ignorar arquivos de ambiente
+.env
+.env.*
+ocelot-backend/.env
+
+# Ignorar arquivos de banco de dados, exceto o init
+database/*
+
+# Ignorar dependências
+node_modules/
+vendor/
+__pycache__/
+*.egg-info/
+dist/
+build/
+
+# Ignorar arquivos sensíveis e inúteis
+*.log
+*.bak
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+
+# Ignorar arquivos de configuração locais
+*.local
+*.secret

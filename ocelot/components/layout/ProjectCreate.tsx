@@ -49,7 +49,7 @@ const ProjectCreate: React.FC = () => {
     real_end_date: null as Date | null, // Iniciar como nulo
     status: ''
   });
-  const [photoBase64, setPhotoBase64] = useState<string | null>(null);
+
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -81,7 +81,6 @@ const ProjectCreate: React.FC = () => {
 
     if (!result.canceled) {
       setPhotoUri(result.assets[0].uri);
-      setPhotoBase64(result.assets[0].base64 || null);
     }
   };
   
@@ -100,8 +99,8 @@ const ProjectCreate: React.FC = () => {
   
   // Lógica NATIVA para o submit
   const handleSubmit = async () => {
-    if (!form.name || !form.description || !photoBase64) {
-      Alert.alert('Campos obrigatórios', 'Por favor, preencha o nome, descrição e selecione uma imagem.');
+    if (!form.name || !form.description ) {
+      Alert.alert('Campos obrigatórios', 'Por favor, preencha o nome, descrição');
       return;
     }
 
@@ -113,8 +112,7 @@ const ProjectCreate: React.FC = () => {
 
     const body = {
       ...form,
-      photo: photoBase64, // Adiciona a foto em base64 ao corpo da requisição
-      // Converte as datas para string no formato ISO, que é o padrão ideal para APIs
+      // photo: ,
       start_date: form.start_date.toISOString(),
       real_end_date: form.real_end_date ? form.real_end_date.toISOString() : null,
     };
