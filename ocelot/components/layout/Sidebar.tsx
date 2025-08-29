@@ -1,8 +1,9 @@
-import React from "react";
+import * as React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import type { LinkProps } from "expo-router";
-import { tintColorLight, purpleLight, midDarkPurple } from "@/constants/theme";
+import { COLORS } from "@/constants/theme";
+import { isSearchBarAvailableForCurrentPlatform } from "react-native-screens";
 
 const navItems: NavItem[] = [
   { name: "Página Inicial", href: "/" },
@@ -15,23 +16,25 @@ const navItems: NavItem[] = [
 type NavItem = {
   name: string;
   href: LinkProps["href"];
-};
+  };
 
 function NavLink({ item }: { item: NavItem }) {
   return (
+    <View className="flex flex-col justify-start items-start px-[20px] relative gap-2.5">
     <Link href={item.href} asChild>
-      <Pressable style={styleSidebar.navItem}>
-        <Text style={styleSidebar.navText}>{item.name}</Text>
+      <Pressable>
+        <Text className="self-stretch flex-grow-0 flex-shrink-0 text-2xl font-medium text-left text-white" style={{ fontFamily: 'DMSans_400Regular' }}>{item.name}</Text>
       </Pressable>
     </Link>
+    </View>
   );
 }
 
 export default function Sidebar() {
   return (
-    <View style={styleSidebar.sidebarContainer}>
-      <Text style={styleSidebar.title}>PESQUISAR</Text>
-      <View style={styleSidebar.navGroup}>
+    <View className="px-[20px] py-[20px] w-[280px] h-[874px] gap-5" >
+      <Text className="px-[20px]  text-2xl text-white" style={{ fontFamily: 'DMSans_600SemiBold' }}>PESQUISAR</Text>
+      <View className="gap-2.5">
         {navItems.map((item) => (
           <NavLink key={item.name} item={item} />
         ))}
@@ -39,37 +42,3 @@ export default function Sidebar() {
     </View>
   );
 }
-
-export const styleSidebar = StyleSheet.create({
-  sidebarContainer: {
-    width: 250,
-    padding: 20,
-    paddingLeft: 50,
-  },
-  title: {
-    color: tintColorLight,
-    fontSize: 14,
-    fontWeight: "bold",
-    letterSpacing: 1,
-    marginBottom: 10,
-  },
-  navGroup: {
-    gap: 5,
-  },
-  navItem: {
-    textAlign: "left",
-    paddingVertical: 5,
-    paddingHorizontal: 5,
-    borderRadius: 8,
-    marginBottom: 2,
-  },
-  navItemActive: {
-    backgroundColor: purpleLight,
-    borderColor: midDarkPurple,
-  },
-  navText: {
-    color: tintColorLight,
-    fontSize: 18,
-    fontWeight: "400",
-  },
-});

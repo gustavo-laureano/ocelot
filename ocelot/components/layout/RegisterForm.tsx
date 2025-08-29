@@ -1,15 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView, ActivityIndicator, Platform} from 'react-native';
-import { Title, Card, purpleDark } from '@/constants/theme';
+import * as React from 'react';
 import { useState } from 'react';
-
-
+import { View, Text, Pressable, TextInput, KeyboardAvoidingView, ActivityIndicator, Platform } from 'react-native';
 import { API_URL } from '@/constants/env';
-// Se estiver testando em um celular Android, use o IP da sua máquina no lugar de localhost. Ex: 'http://192.168.1.10:3000/auth/register'
 
 export default function RegisterForm() {
-  // --- STATE MANAGEMENT ---
-  // Para cada campo do formulário, criamos um "estado" para armazenar seu valor.
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -19,20 +13,16 @@ export default function RegisterForm() {
   const [linkedin, setLinkedin] = useState('');
   const [photo, setPhoto] = useState('');
 
-  // Estados para controlar o feedback ao usuário
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
 
-  // --- FUNÇÃO DE SUBMISSÃO ---
   const handleRegister = async () => {
-    // Validação básica
     if (!username || !name || !email || !password) {
       setMessage('Por favor, preencha todos os campos obrigatórios.');
       setIsError(true);
       return;
     }
-    
     setIsLoading(true);
     setMessage('');
 
@@ -50,9 +40,7 @@ export default function RegisterForm() {
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
       });
 
@@ -61,18 +49,15 @@ export default function RegisterForm() {
       if (response.ok) {
         setMessage(result.message || 'Cadastro realizado com sucesso!');
         setIsError(false);
-        // Limpar o formulário (opcional)
         setUsername('');
         setName('');
         setEmail('');
         setPassword('');
-        // ... limpar outros campos
       } else {
         setMessage(result.message || 'Ocorreu um erro.');
         setIsError(true);
       }
     } catch (error) {
-      console.error('Fetch Error:', error);
       setMessage('Não foi possível conectar ao servidor. Verifique sua conexão.');
       setIsError(true);
     } finally {
@@ -81,157 +66,65 @@ export default function RegisterForm() {
   };
 
   return (
-    // KeyboardAvoidingView ajuda a não esconder os inputs atrás do teclado
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === "ios" ? "padding" : "height"} 
-      style={{ flex: 1 }}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1 justify-center"
     >
-        {/* Usando o seu estilo de Card, se aplicável, ou o estilo local */}
-        <View style={[Card.cardContainer, styles.formContainer]}>
-          <Text style={Title.h1}>Cadastro</Text>
+      <View className="flex flex-col justify-center items-center w-[800px] gap-20 px-[30px] py-[37px] rounded-[10px] border border-white bg-main" style={{ filter: 'drop-shadow(0px 1px 3px rgba(0,0,0,0.15))' }}>
+        <View className="flex flex-col justify-start items-start w-full gap-2.5">
+          <Text className="w-[740px] text-7xl font-bold text-center text-white" style={{ fontFamily: 'DMSans_700Bold' }}>Cadastro</Text>
+          <Text className="w-[740px] text-xl font-bold text-center uppercase text-white opacity-80" style={{ fontFamily: 'DMSans_400Regular' }}>crie uma nova conta :)</Text>
+        </View>
+        <View className="flex flex-col justify-center items-center w-full gap-5">
+          <FormInput label="E-mail" value={email} onChangeText={setEmail} />
+          <FormInput label="Nome de usuário" value={username} onChangeText={setUsername} />
+          <FormInput label="Nome completo" value={name} onChangeText={setName} />
+          <FormInput label="Senha" value={password} onChangeText={setPassword} secureTextEntry/>
+          <FormInput label="Telefone" value={phone} onChangeText={setPhone}/>
+          <FormInput label="URL do GitHub" value={github} onChangeText={setGithub}/>
+          <FormInput label="URL do LinkedIn" value={linkedin} onChangeText={setLinkedin} />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Nome de Usuário *"
-            value={username}
-            onChangeText={setUsername} // Atualiza o estado 'username' a cada letra digitada
-            placeholderTextColor="#888"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Nome Completo *"
-            value={name}
-            onChangeText={setName}
-            placeholderTextColor="#888"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Email *"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address" // Melhora a experiência do usuário mostrando o teclado de email
-            autoCapitalize="none"
-            placeholderTextColor="#888"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Senha *"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry // Esconde o texto da senha
-            placeholderTextColor="#888"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Telefone"
-            value={phone}
-            onChangeText={setPhone}
-            keyboardType="phone-pad"
-            placeholderTextColor="#888"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="URL do GitHub"
-            value={github}
-            onChangeText={setGithub}
-            autoCapitalize="none"
-            placeholderTextColor="#888"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="URL do LinkedIn"
-            value={linkedin}
-            onChangeText={setLinkedin}
-            autoCapitalize="none"
-            placeholderTextColor="#888"
-          />
-
-          {/* Botão de Cadastro */}
-          <Pressable 
-            style={({ pressed }) => [styles.button, pressed && styles.buttonPressed, isLoading && styles.buttonDisabled]} 
+          <Pressable
+            className="flex justify-center items-center gap-2.5 px-14 py-[7px] rounded-[10px] bg-white"
             onPress={handleRegister}
             disabled={isLoading}
+            style={({ pressed }) => pressed ? { opacity: 0.8 } : {}}
           >
             {isLoading ? (
-              <ActivityIndicator color="#fff" /> // Mostra um spinner durante o carregamento
+              <ActivityIndicator color="#001203" />
             ) : (
-              <Text style={styles.buttonText}>Cadastrar</Text>
+              <Text className="text-xl font-bold text-center uppercase text-main" style={{ fontFamily: 'DMSans_400Regular' }}>cadastrar</Text>
             )}
           </Pressable>
-
-          {/* Mensagem de Feedback */}
           {message ? (
-            <Text style={isError ? styles.errorMessage : styles.successMessage}>
+            <Text className={`mt-2 text-center font-bold ${isError ? 'text-red-700' : 'text-green-600'}`}>
               {message}
             </Text>
           ) : null}
-
         </View>
+      </View>
     </KeyboardAvoidingView>
   );
 }
 
-// --- ESTILOS ---
-// Usamos StyleSheet.create para otimizações e validações
-const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  formContainer: {
-    // Estilos do seu Card.cardContainer serão aplicados.
-    // Adicione ou substitua estilos aqui se necessário.
-    padding: 20,
-    backgroundColor: '#fff', // Exemplo
-    borderRadius: 10,       // Exemplo
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 24,
-    color: '#333',
-  },
-  input: {
-    height: 50,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-    backgroundColor: '#f9f9f9',
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: purpleDark,
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-  },
-  buttonPressed: {
-    backgroundColor: '#0056b3',
-  },
-  buttonDisabled: {
-    backgroundColor: '#a0a0a0',
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  successMessage: {
-    color: 'green',
-    textAlign: 'center',
-    marginTop: 15,
-    fontSize: 16,
-  },
-  errorMessage: {
-    color: 'red',
-    textAlign: 'center',
-    marginTop: 15,
-    fontSize: 16,
-  },
-});
+type FormInputProps = {
+  label: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  secureTextEntry?: boolean;
+};
+
+function FormInput({ label, ...props }: FormInputProps) {
+  return (
+    <View >
+      <TextInput
+        className="flex flex-col w-[740px] h-[80px] px-[26px] py-[10px] rounded-[10px] border border-white bg-main text-2xl text-white"
+        style={{ fontFamily: 'DMSans_400Regular' }}
+        placeholder={label}
+        placeholderTextColor='rgba(255, 255, 255, 0.5)'
+        {...props}
+      />
+    </View>
+  );
+}
+

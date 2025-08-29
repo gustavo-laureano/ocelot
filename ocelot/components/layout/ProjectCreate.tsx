@@ -1,52 +1,37 @@
 import React, { useState } from 'react';
 import { 
-  StyleSheet, 
   Text, 
   View, 
   TouchableOpacity, 
   ScrollView, 
-  Pressable,
-  Alert, 
-  Platform,
-  TextInput // Importado para usar no FormInput
+  Alert,
+  TextInput
 } from 'react-native';
 
-// Supondo que seu theme.ts exporte a cor
-import {purpleDark} from '@/constants/theme'; 
-
 import { API_URL } from '@/constants/env';
-// Bibliotecas nativas - INSTALE-AS!
-// npx expo install expo-image-picker @react-native-community/datetimepicker
 import * as ImagePicker from 'expo-image-picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { executeNativeBackPress } from 'react-native-screens';
+import "../../styles/global.css";
 
-
-// --- COMPONENTE REUTILIZÁVEL PARA INPUTS (pode ficar no mesmo arquivo ou ser importado) ---
 const FormInput = ({ label, value, onChangeText, multiline = false, ...props }) => (
-  <View style={styles.inputContainer}>
-    <Text style={styles.label}>{label}</Text>
+  <View>
+    <Text>{label}</Text>
     <TextInput
-      style={[styles.input, multiline && { height: 100, textAlignVertical: 'top' }]}
       value={value}
       onChangeText={onChangeText}
-      placeholderTextColor="#999"
       multiline={multiline}
       {...props}
     />
   </View>
 );
 
-
-// --- COMPONENTE PRINCIPAL ---
 const ProjectCreate: React.FC = () => {
   const [form, setForm] = useState({
     team_id: '',
     owner_id: '',
     name: '',
     description: '',
-    start_date: new Date(), // Usar objetos Date para o seletor
-    real_end_date: null as Date | null, // Iniciar como nulo
+    start_date: new Date(),
+    real_end_date: null as Date | null,
     status: ''
   });
 
@@ -54,16 +39,10 @@ const ProjectCreate: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
-  // State para o DatePicker
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [datePickerField, setDatePickerField] = useState<'start_date' | 'real_end_date'>('start_date');
-
-  // Lógica NATIVA para atualizar o formulário
   const handleChange = (name: keyof typeof form, value: any) => {
     setForm(prevForm => ({ ...prevForm, [name]: value }));
   };
 
-  // Lógica NATIVA para selecionar imagem
   const handlePhotoChange = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -76,28 +55,14 @@ const ProjectCreate: React.FC = () => {
       allowsEditing: true,
       aspect: [16, 9],
       quality: 0.7,
-      base64: true, // Solicita a conversão para base64
+      base64: true,
     });
 
     if (!result.canceled) {
       setPhotoUri(result.assets[0].uri);
     }
   };
-  
-  // Funções NATIVAS para o seletor de data
-  const onDateChange = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(Platform.OS === 'ios'); // No iOS, o picker pode ficar aberto
-    if (selectedDate) {
-      handleChange(datePickerField, selectedDate);
-    }
-  };
 
-  const showDatepickerFor = (fieldName: 'start_date' | 'real_end_date') => {
-    setDatePickerField(fieldName);
-    setShowDatePicker(true);
-  };
-  
-  // Lógica NATIVA para o submit
   const handleSubmit = async () => {
     if (!form.name || !form.description ) {
       Alert.alert('Campos obrigatórios', 'Por favor, preencha o nome, descrição');
@@ -107,12 +72,8 @@ const ProjectCreate: React.FC = () => {
     setLoading(true);
     setMessage('');
 
-    // **IMPORTANTE**: Use o IP da sua máquina, não 'localhost'
-
-
     const body = {
       ...form,
-      // photo: ,
       start_date: form.start_date.toISOString(),
       real_end_date: form.real_end_date ? form.real_end_date.toISOString() : null,
     };
@@ -129,7 +90,6 @@ const ProjectCreate: React.FC = () => {
       if (response.ok) {
         setMessage('Projeto criado com sucesso!');
         Alert.alert('Sucesso!', 'Projeto criado com sucesso!');
-        // Aqui você pode resetar o formulário ou navegar para outra tela
       } else {
         Alert.alert('Sucesso', data.message || 'Erro ao criar projeto.');
         Alert.alert('Erro', data.message || 'Ocorreu um erro ao criar o projeto.');
@@ -142,14 +102,14 @@ const ProjectCreate: React.FC = () => {
     }
   };
 
-
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>Criar Projeto</Text>
+    <ScrollView className='flex justify-center items-center flex-grow'>
+      <View className="flex flex-col justify-center items-center flex-grow-0 flex-shrink-0c w-[1200px] gap-20 px-[30px] py-[37px] rounded-[10px] border border-white">
+        <Text className="self-stretch flex-grow-0 flex-shrink-0 text-7xl font-bold text-center text-white"> Criar Projeto</Text>
         <FormInput
           label="Nome do Projeto"
           placeholder="Ex: App de Gestão Financeira"
+          className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-[57px] relative w-[600px] gap-2.5 px-[26px] py-[17px] rounded-[10px] border border-white"
           value={form.name}
           onChangeText={(text: any) => handleChange('name', text)}
         />
@@ -181,164 +141,40 @@ const ProjectCreate: React.FC = () => {
           onChangeText={(text: any) => handleChange('status', text)}
         />
 
-        {/* Seletor de Imagem Nativo */}
-        <Text style={styles.label}>Imagem do Projeto</Text>
-        <TouchableOpacity style={styles.imagePickerButton} onPress={handlePhotoChange}>
-            <Text style={styles.buttonTextBlue}>
+        <Text>Imagem do Projeto</Text>
+        <TouchableOpacity onPress={handlePhotoChange}>
+            <Text>
               {photoUri ? 'Alterar Imagem' : 'Escolher uma Imagem'}
             </Text>
         </TouchableOpacity>
-        <Text style={styles.fileName}>Imagem selecionada!</Text>
+        <Text>Imagem selecionada!</Text>
 
-
-        {/* <Text style={styles.label}>Data de Início</Text>
-        <TouchableOpacity style={styles.datePickerButton} onPress={() => showDatepickerFor('start_date')}>
-          <Text>{form.start_date.toLocaleDateString('pt-BR')}</Text>
-        </TouchableOpacity>
-
-        <Text style={styles.label}>Data de Conclusão (Opcional)</Text>
-        <TouchableOpacity style={styles.datePickerButton} onPress={() => showDatepickerFor('real_end_date')}>
-          <Text>
-            {form.real_end_date ? form.real_end_date.toLocaleDateString('pt-BR') : 'Selecione uma data'}
-          </Text>
-        </TouchableOpacity>
-        
-          <DateTimePicker
-            value={form[datePickerField] || new Date()} // Garante um valor válido
-            mode="date"
-            display="default"
-            onChange={onDateChange}
-          /> */}
-
-<FormInput
+        <FormInput
           label="Data de inicio"
-          type="date"
           placeholder="xx/xx/xxxx"
           value={form.start_date}
           onChangeText={(text: any) => handleChange('start_date', text)}
         />
 
-<FormInput
+        <FormInput
           label="Data de conclusão (Opcional)"
-          type="date"
           placeholder="xx/xx/xxxx"
           value={form.real_end_date}
           onChangeText={(text: any) => handleChange('real_end_date', text)}
         />
         
-        {/* Botão de Submit */}
         <TouchableOpacity 
-            style={[styles.button, loading && styles.buttonDisabled]} 
             onPress={handleSubmit} 
             disabled={loading}>
-            <Text style={styles.buttonText}>{loading ? 'Criando...' : 'Criar Projeto'}</Text>
+            <Text>{loading ? 'Criando...' : 'Criar Projeto'}</Text>
         </TouchableOpacity>
 
-
-            <Text style={loading ? styles.successMessage : styles.errorMessage}>
-              {message}
-            </Text>
+        <Text>
+          {message}
+        </Text>
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',},
-  formContainer: {
-    minWidth: '70%',
-    alignSelf: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 24,
-    color: '#333',
-  },
-  inputContainer: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#444',
-    marginBottom: 8,
-  },
-  input: {
-    height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
-    fontSize: 16,
-  },
-  imagePickerButton: {
-    backgroundColor: '#e7f3ff',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#007bff',
-  },
-  buttonTextBlue: {
-    color: '#007bff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  fileName: {
-    textAlign: 'center',
-    marginTop: 8,
-    color: 'green',
-    fontSize: 14,
-  },
-  datePickerButton: {
-    height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  button: {
-    backgroundColor: purpleDark, // Usando a cor do seu tema
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonDisabled: {
-    backgroundColor: '#a0a0a0',
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  successMessage: {
-    color: 'blue',
-    textAlign: 'center',
-    marginTop: 15,
-    fontSize: 16,
-  },
-  errorMessage: {
-    color: 'red',
-    textAlign: 'center',
-    marginTop: 15,
-    fontSize: 16,
-  },
-});
 
 export default ProjectCreate;

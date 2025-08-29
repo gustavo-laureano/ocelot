@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { COLORS } from '../../constants/theme'; // Importa as cores do tema
 
 // Interface para as propriedades do componente
 interface WeeklyCalendarProps {
@@ -86,10 +87,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     paddingVertical: 10,
     paddingHorizontal: 5,
-    backgroundColor: '#f4f4f4', // Um fundo neutro
+    backgroundColor: COLORS.card, // Fundo do card
     borderRadius: 15,
     margin: 10,
-    shadowColor: '#000',
+    shadowColor: COLORS.main,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -105,12 +106,12 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   selectedDayContainer: {
-    backgroundColor: '#007AFF', // Cor primária para seleção
+    backgroundColor: COLORS.main, // Cor primária para seleção
   },
   dayText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#8A8A8E',
+    color: COLORS.text, // Texto padrão
     marginBottom: 8,
   },
   dateNumberContainer: {
@@ -121,17 +122,17 @@ const styles = StyleSheet.create({
     borderRadius: 16, // Círculo perfeito
   },
   todayIndicator: {
-    backgroundColor: '#EFEFF4',
+    backgroundColor: COLORS.background,
     borderWidth: 1,
-    borderColor: '#007AFF',
+    borderColor: COLORS.main,
   },
   dateText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#1C1C1E',
+    color: COLORS.text,
   },
   selectedText: {
-    color: '#FFFFFF', // Texto branco quando selecionado
+    color: COLORS.white, // Texto branco quando selecionado
     fontWeight: 'bold',
   },
 });

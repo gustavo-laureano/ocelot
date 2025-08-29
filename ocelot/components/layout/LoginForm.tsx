@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable, TextInput, KeyboardAvoidingView, ActivityIndicator, Platform} from 'react-native';
-import { Title, Card, purpleDark } from '@/constants/theme';
+import { Title, Card } from '@/constants/theme';
 import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -73,37 +73,46 @@ export default function LoginForm() {
       style={{ flex: 1 }}
     >
         {/* Usando o seu estilo de Card, se aplicável, ou o estilo local */}
-        <View style={[Card.cardContainer, styles.formContainer]}>
-          <Text style={Title.h1}>Login</Text>
+        <View  className="flex flex-col justify-center items-center flex-grow-0 flex-shrink-0 w-[480px] relative gap-[61px] px-[30px] py-[37px] rounded-[10px] border border-white">
+         
+         <View className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative gap-2.5" >
+          <Text className="self-stretch flex-grow-0 flex-shrink-0 w-[420px] text-7xl font-bold text-center text-white" style={{ fontFamily: 'DMSans_900Black' }}>Login</Text>
+          <Text className="self-stretch flex-grow-0 flex-shrink-0 w-[420px] text-xl font-bold text-center uppercase text-white" style={{ fontFamily: 'DMSans_400Regular' }}>Bem-vindo de volta!</Text>
+         </View>
 
+         <View className="flex flex-col justify-center items-center self-stretch flex-grow-0 flex-shrink-0 gap-5">
           <TextInput
-            style={styles.input}
+            className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-[60px] relative gap-2.5 px-[26px] py-[17px] rounded-[10px] border border-white opacity-60 text-xl font-bold text-left text-white"
+            style={{ fontFamily: 'DMSans_400Regular' }}
             placeholder="Nome de Usuário *"
             value={username}
             onChangeText={setUsername} // Atualiza o estado 'username' a cada letra digitada
             placeholderTextColor="#888"
           />
            <TextInput
-            style={styles.input}
-            placeholder="Senha *"
+            className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-[60px] relative gap-2.5 px-[26px] py-[17px] rounded-[10px] border border-white opacity-60 text-xl font-bold text-left text-white"
+            style={{ fontFamily: 'DMSans_400Regular' }}
+            placeholder="Senha*"
             value={password}
             onChangeText={setPassword}
             secureTextEntry // Esconde o texto da senha
             placeholderTextColor="#888"
-          />
+          /> 
 
-          {/* Botão de Login */}
           <Pressable 
             style={({ pressed }) => [styles.button, pressed && styles.buttonPressed, isLoading && styles.buttonDisabled]} 
+            className="flex justify-center items-center flex-grow-0 flex-shrink-0 h-10 relative gap-2.5 rounded-[10px] bg-white"
             onPress={handleLogin}
             disabled={isLoading}
           >
-            {isLoading ? (
+           {isLoading ? (
               <ActivityIndicator color="#fff" /> // Mostra um spinner durante o carregamento
             ) : (
-              <Text style={styles.buttonText}>Fazer Login</Text>
+              <Text style={{ fontFamily: 'DMSans_400Regular' }} className="flex-grow-0 flex-shrink-0 w-[200px] text-xl font-bold text-center uppercase text-[#001203]">Fazer Login</Text>
             )}
           </Pressable>
+          
+          </View>
 
           {/* Mensagem de Feedback */}
           {message ? (
@@ -150,7 +159,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    backgroundColor: purpleDark,
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',

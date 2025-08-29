@@ -6,6 +6,7 @@ import RankingWidget from '@/components/layout/Ranking';
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { COLORS } from '@/constants/theme';
 
 function useAuthRedirect() {
   const router = useRouter();
@@ -28,12 +29,10 @@ export default function DashboardScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.row}>
         {/* Esquerda: Carousel em cima, Calendar embaixo */}
-        
           <Carousel />
           <View style={{ marginTop: 16 }}>
             <RankingWidget />
-
-          <WeeklyCalendar
+            <WeeklyCalendar
               onDateSelect={function (date: Date): void {
                 throw new Error('Function not implemented.');
               }}
@@ -48,6 +47,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
+    backgroundColor: COLORS.background,
   },
   row: {
     flexDirection: 'row',
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     width: 1,
-    backgroundColor: '#ddd',
+    backgroundColor: COLORS.border,
     marginHorizontal: 12,
     alignSelf: 'stretch',
   },

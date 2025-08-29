@@ -1,4 +1,4 @@
-<img src="./docs/logo.svg" alt="Ocelot" width="300">
+<img src="./ocelot/assets/images/logo.svg" alt="Ocelot" width="300">
 
 # Documentação do Projeto Ocelot 🐆
 
